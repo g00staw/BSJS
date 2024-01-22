@@ -1,0 +1,80 @@
+html{
+    background-color: rgb(10, 10, 10);
+    color: rgb(255, 255, 255, 0.9);
+}
+
+#gamesboard-container{
+    width: 500px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.game-board{
+    width: 200px;
+    height: 200px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.block{
+    width: 20px;
+    height: 20px;
+}
+
+.option-container{
+    display: flex;
+    align-items: center;
+    margin: 30px 0;
+    width: 500px;
+    height: 60px;
+    background-color: rgb(23, 169, 206);
+}
+
+.dest{
+    background-color: brown;
+}
+
+.sub{
+    background-color: green;
+}
+
+.cru{
+    background-color: purple;
+}
+
+.batt{
+    background-color: orange;
+}
+
+.carr{
+    background-color: blue;
+}
+
+.dest-prev{
+    width: 20px;
+    height: 10px;
+    margin: 3px;
+}
+
+.sub-prev{
+    width: 30px;
+    height: 10px;
+    margin: 3px;
+}
+
+.cru-prev{
+    width: 30px;
+    height: 10px;
+    margin: 3px;
+}
+.batt-prev{
+    width: 40px;
+    height: 10px;
+    margin: 3px;
+}
+
+.carr-prev{
+    width: 50px;
+    height: 10px;
+    margin: 3px;
+}

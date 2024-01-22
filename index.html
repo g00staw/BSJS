@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSJS - Battleship JS Project</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id="game-info">
+        <p>Tura: <span id="turn-display"></span></p>
+        <p>Informacje: <span id="info"></span></p>
+    </div>
+
+    <div id="gamesboard-container"></div>
+
+    <div class="option-container">
+        <div class="dest-prev dest" draggable="true"></div>
+        <div class="sub-prev sub" draggable="true"></div>
+        <div class="cru-prev cru" draggable="true"></div>
+        <div class="batt-prev batt" draggable="true"></div>
+        <div class="carr-prev carr" draggable="true"></div>
+    </div>
+
+    <button id="flip-ship">Obróć</button>
+    <button id="start-button">Start</button>
+
+    <script src="app.js"></script>
+</body>
+</html>
