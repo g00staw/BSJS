@@ -19,7 +19,7 @@ flipShip.addEventListener('click', flip)
 
 // creating board
 
-const witdh = 10
+const width = 10
 
 function createBoard(color, user){
     const gameBoardContainer = document.createElement('div')
@@ -27,7 +27,7 @@ function createBoard(color, user){
     gameBoardContainer.style.backgroundColor = color
     gameBoardContainer.id = user
 
-    for(let i = 0; i < witdh * witdh; i++){
+    for(let i = 0; i < width * width; i++){
         const block = document.createElement('div')
         block.classList.add('block')
         block.id = i
@@ -59,34 +59,79 @@ const ships = [dest, sub, cru, batt, carr]
 
 //42;25
 
-function addShipPiece(ship){
-    const allBoardBlocks = document.querySelectorAll('#computer div')
+function addShipPiece(user, ship, startId){
+    const allBoardBlocks = document.querySelectorAll(`#${user} div`)
     let randomBoolean = Math.random() < 0.5
-    let isHorizontal = randomBoolean
-    let randomStartIndex = Math.floor(Math.random() * witdh * witdh)
-    console.log(randomStartIndex)
+    let isHorizontal = user === 'player' ? angle === 0 : randomBoolean
+    let randomStartIndex = Math.floor(Math.random() * width * width)
+    
+    // 1;07
+    let startIndex 
 
-    let validStart = isHorizontal ? randomStartIndex <= witdh * witdh - ship.length ? randomStartIndex : 
-        witdh * witdh - ship.length : 
-        randomStartIndex <= witdh * witdh - witdh * ship.length ? randomStartIndex : 
-            randomStartIndex - ship.length * witdh + witdh
+    let validStart = isHorizontal ? randomStartIndex <= width * width - ship.length ? randomStartIndex : 
+        width * width - ship.length : 
+        randomStartIndex <= width * width - width * ship.length ? randomStartIndex : 
+            randomStartIndex - ship.length * width + width
         // 53;49
 
     let shipBlocks = []
 
     for(let i = 0; i < ship.length; i++){
         if(isHorizontal) { 
-            shipBlocks.push(allBoardBlocks[Number(randomStartIndex) + i])
+            shipBlocks.push(allBoardBlocks[Number(validStart) + i])
         }
         else {
-            shipBlocks.push(allBoardBlocks[Number(randomStartIndex) + i * witdh]);
+            shipBlocks.push(allBoardBlocks[Number(validStart) + i * width]);
         }
     }
 
-    shipBlocks.forEach(shipBlock => {
-        shipBlock.classList.add(ship.name)
-        shipBlock.classList.add('taken')
-    })
+    let valid
 
+    if(isHorizontal) {
+        shipBlocks.every((_shipBlock, index) => 
+            valid = shipBlocks[0].id % width !== width - (shipBlocks.length - (index + 1)))
+    } else {
+        shipBlocks.every((_shipBlock, index) => 
+            valid = shipBlocks[0].id < 90 + (width * index + 1)
+        )
+    }
+
+    const notTaken = shipBlocks.every(shipBlock => !shipBlock.classList.contains('taken'))
+
+    if(valid && notTaken) {
+        shipBlocks.forEach(shipBlock => {
+            shipBlock.classList.add(ship.name)
+            shipBlock.classList.add('taken')
+        })
+    } else {
+        addShipPiece(ship)
+    }
+    
 }
-ships.forEach(ship => addShipPiece(ship))
+ships.forEach(ship => addShipPiece('computer', ship))
+
+
+// dragging p ships
+let draggedShip
+const optionShips = Array.from(optionContainer.children)
+optionShips.forEach(optionShip => optionShip.addEventListener('dragstart', dragStart))
+
+const allPlayerBlocks = document.querySelectorAll('#player div')
+allPlayerBlocks.forEach(playerBlock => {
+    playerBlock.addEventListener('dragover', dragOver)
+    playerBlock.addEventListener('drop', dropShip)
+})
+
+function dragStart(e) {
+    draggedShip = e.target
+}
+
+function dragOver(e) {
+    e.preventDefault()
+}
+
+function dropShip(e) {
+    const startId = e.target.id
+    const ship = ships[draggedShip.id]
+    addShipPiece('player', ship, startId)
+}
