@@ -38,7 +38,7 @@ function createBoard(color, user){
 }
 
 createBoard('gray', 'player')
-createBoard('yellow', 'bot')
+createBoard('yellow', 'computer')
 
 // creating ships
 
@@ -59,12 +59,34 @@ const ships = [dest, sub, cru, batt, carr]
 
 //42;25
 
-function addShipPiece() {
+function addShipPiece(ship){
     const allBoardBlocks = document.querySelectorAll('#computer div')
     let randomBoolean = Math.random() < 0.5
     let isHorizontal = randomBoolean
     let randomStartIndex = Math.floor(Math.random() * witdh * witdh)
     console.log(randomStartIndex)
 
+    let validStart = isHorizontal ? randomStartIndex <= witdh * witdh - ship.length ? randomStartIndex : 
+        witdh * witdh - ship.length : 
+        randomStartIndex <= witdh * witdh - witdh * ship.length ? randomStartIndex : 
+            randomStartIndex - ship.length * witdh + witdh
+        // 53;49
+
+    let shipBlocks = []
+
+    for(let i = 0; i < ship.length; i++){
+        if(isHorizontal) { 
+            shipBlocks.push(allBoardBlocks[Number(randomStartIndex) + i])
+        }
+        else {
+            shipBlocks.push(allBoardBlocks[Number(randomStartIndex) + i * witdh]);
+        }
+    }
+
+    shipBlocks.forEach(shipBlock => {
+        shipBlock.classList.add(ship.name)
+        shipBlock.classList.add('taken')
+    })
+
 }
-addShipPiece(dest)
+ships.forEach(ship => addShipPiece(ship))
