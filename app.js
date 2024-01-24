@@ -56,22 +56,15 @@ const batt = new Ship('batt', 4)
 const carr = new Ship('carr', 5)
 
 const ships = [dest, sub, cru, batt, carr]
+let notDropped
 
 //42;25
 
-function addShipPiece(user, ship, startId){
-    const allBoardBlocks = document.querySelectorAll(`#${user} div`)
-    let randomBoolean = Math.random() < 0.5
-    let isHorizontal = user === 'player' ? angle === 0 : randomBoolean
-    let randomStartIndex = Math.floor(Math.random() * width * width)
-    
-    // 1;07
-    let startIndex 
-
-    let validStart = isHorizontal ? randomStartIndex <= width * width - ship.length ? randomStartIndex : 
+function getValidity(allBoardBlocks, isHorizontal, startIndex, ship){
+    let validStart = isHorizontal ? startIndex <= width * width - ship.length ? startIndex : 
         width * width - ship.length : 
-        randomStartIndex <= width * width - width * ship.length ? randomStartIndex : 
-            randomStartIndex - ship.length * width + width
+        startIndex <= width * width - width * ship.length ? startIndex : 
+            startIndex - ship.length * width + width
         // 53;49
 
     let shipBlocks = []
@@ -98,13 +91,29 @@ function addShipPiece(user, ship, startId){
 
     const notTaken = shipBlocks.every(shipBlock => !shipBlock.classList.contains('taken'))
 
+    return {shipBlocks, valid, notTaken}
+}
+
+function addShipPiece(user, ship, startId){
+    const allBoardBlocks = document.querySelectorAll(`#${user} div`)
+    let randomBoolean = Math.random() < 0.5
+    let isHorizontal = user === 'player' ? angle === 0 : randomBoolean
+    let randomStartIndex = Math.floor(Math.random() * width * width)
+    
+    // 1;07
+    let startIndex = startId ? startId : randomStartIndex 
+
+    
+    const { shipBlocks, valid, notTaken} = getValidity(allBoardBlocks, isHorizontal, startIndex, ship)
+
     if(valid && notTaken) {
         shipBlocks.forEach(shipBlock => {
             shipBlock.classList.add(ship.name)
             shipBlock.classList.add('taken')
         })
     } else {
-        addShipPiece(ship)
+        if (user === 'computer') addShipPiece(user, ship, startId)
+        if (user === 'player') notDropped = true
     }
     
 }
@@ -123,15 +132,37 @@ allPlayerBlocks.forEach(playerBlock => {
 })
 
 function dragStart(e) {
+    notDropped = false
     draggedShip = e.target
 }
 
 function dragOver(e) {
     e.preventDefault()
+    const ship = ships[draggedShip.id]
+    highLightArea(e.target.id, ship)
 }
 
 function dropShip(e) {
     const startId = e.target.id
     const ship = ships[draggedShip.id]
     addShipPiece('player', ship, startId)
+    if(!notDropped){
+        draggedShip.remove()
+    }
+}
+
+// add highlight
+
+function highLightArea(startIndex, ship){
+    const allBoardBlocks = document.querySelectorAll('#player div')
+    let isHorizontal = angle === 0
+
+    const { shipBlocks, valid, notTaken } = getValidity(allBoardBlocks, isHorizontal, startIndex, ship)
+    
+    if(valid && notTaken){
+        shipBlocks.forEach(shipBlock => {
+            shipBlock.classList.add('hover')
+            setTimeout(() =>  shipBlock.classList.remove('hover'), 500)
+        })
+    }
 }

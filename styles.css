@@ -78,3 +78,15 @@ html{
     height: 10px;
     margin: 3px;
 }
+
+.hover{
+    background-color: darkslategray;
+}
+
+.boom{
+    background-color: red;
+}
+
+.empty{
+    background-color: white;
+}
