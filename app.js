@@ -176,11 +176,16 @@ let playerTurn
 // start
 
 function startGame(){
-    if(optionContainer.children.length != 0){
-        infoDisplay.textContent = 'Rozłóż wszystkie swoje statki na planszy!'
-    } else{
-        const allBoardBlocks = document.querySelectorAll('#computer div')
-        allBoardBlocks.forEach(block => block.addEventListener('click', handleClick))
+    if(playerTurn === undefined){
+        if(optionContainer.children.length != 0){
+            infoDisplay.textContent = 'Rozłóż wszystkie swoje statki na planszy!'
+        } else{
+            const allBoardBlocks = document.querySelectorAll('#computer div')
+            allBoardBlocks.forEach(block => block.addEventListener('click', handleClick))
+        }
+        playerTurn = true
+        turnDisplay.textContent = 'Twoja tura!'
+        infoDisplay.textContent = 'Gra się zaczęła!'
     }
 
 }
@@ -189,6 +194,10 @@ startButton.addEventListener('click', startGame)
 
 let playerHits = []
 let computerHits = []
+const playerSunkShips = []
+const computerSunkShips = []
+
+
 
 function handleClick(e){
     if(!gameOver){
@@ -200,7 +209,7 @@ function handleClick(e){
             classes = classes.filter(className => className !== 'boom')
             classes = classes.filter(className => className !== 'taken')
             playerHits.push(...classes)
-            console.log(playerHits)
+            checkScore('player', playerHits, playerSunkShips)
         }
         if(!e.target.classList.contains('taken')) {
             infoDisplay.textContent = "Pudło!"
@@ -235,15 +244,65 @@ function computerGo(){
             ) {
                 allBoardBlocks[randomGo].classList.add('boom')
                 infoDisplay.textContent = 'Bot trafił w twój statek!'
-                let classes = Array.from(e.target.classList)
+                let classes = Array.from(allBoardBlocks[randomGo].classList)
                 classes = classes.filter(className => className !== 'block')
                 classes = classes.filter(className => className !== 'boom')
                 classes = classes.filter(className => className !== 'taken')
                 computerHits.push(...classes)
+                checkScore('computer', computerHits, computerSunkShips)
+
             } else{
                 // 1;33
+                infoDisplay.textContent = 'Pudło!'
+                allBoardBlocks[randomGo].classList.add('empty')
             }
-        })
+        }, 3000)
+
+        setTimeout(() => {
+            playerTurn = true
+            turnDisplay.textContent = 'Twoja tura!'
+            infoDisplay.textContent = 'Oddaj strzał!'
+            const allBoardBlocks = document.querySelectorAll('#computer div')
+            allBoardBlocks.forEach(block => block.addEventListener('click', handleClick))
+
+        }, 6000)
     }
+}
+
+function checkScore(user, userHits, userSunkShips){
+    
+    function checkShip(shipName, shipLength) {
+        if(userHits.filter(storedShipName => storedShipName === shipName).length === shipLength){
+            
+            if(user === 'player'){
+                infoDisplay.textContent = `Zatopiłeś/aś ${shipName} bota!`
+                playerHits = userHits.filter(storedShipName => storedShipName !== shipName)
+            }
+            if(user === 'computer'){
+                infoDisplay.textContent = `Bot zatopił twój ${shipName}!`
+                computerHits = userHits.filter(storedShipName => storedShipName !== shipName)
+            }
+            userSunkShips.push(shipName)
+        }
+    }
+
+    checkShip('dest', 2)
+    checkShip('sub', 3)
+    checkShip('cru', 3)
+    checkShip('batt', 4)
+    checkShip('carr', 5)
+
+    console.log('playerHits', playerHits)
+    console.log('playerSunkShips', playerSunkShips)
+
+    if(playerSunkShips.length === 5){
+        infoDisplay.textContent = 'WYGRANA! Zatopiłeś/aś wszystkie statki bota!'
+        gameOver = true
+    }
+    if(computerSunkShips.length === 5){
+        infoDisplay.textContent = 'PRZEGRANA! Bot zatopił wszystkie twoje statki!'
+        gameOver = true
+    }
+
 }
 

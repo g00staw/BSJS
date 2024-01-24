@@ -79,14 +79,22 @@ html{
     margin: 3px;
 }
 
+#computer .dest,
+#computer .sub,
+#computer .carr,
+#computer .cru,
+#computer .batt {
+    background-color: yellow;
+}
+
 .hover{
     background-color: darkslategray;
 }
 
 .boom{
-    background-color: red;
+    background-color: red !important;
 }
 
 .empty{
-    background-color: white;
+    background-color: white !important;
 }
