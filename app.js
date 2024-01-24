@@ -1,6 +1,9 @@
 const gamesBoardContainer =  document.querySelector('#gamesboard-container')
 const optionContainer = document.querySelector('.option-container')
 const flipShip = document.querySelector('#flip-ship')
+const startButton = document.querySelector('#start-button')
+const infoDisplay = document.querySelector('#info')
+const turnDisplay = document.querySelector('#turn-display')
 
 // fliping
 let angle = 0
@@ -166,3 +169,81 @@ function highLightArea(startIndex, ship){
         })
     }
 }
+
+let gameOver = false
+let playerTurn
+
+// start
+
+function startGame(){
+    if(optionContainer.children.length != 0){
+        infoDisplay.textContent = 'Rozłóż wszystkie swoje statki na planszy!'
+    } else{
+        const allBoardBlocks = document.querySelectorAll('#computer div')
+        allBoardBlocks.forEach(block => block.addEventListener('click', handleClick))
+    }
+
+}
+
+startButton.addEventListener('click', startGame)
+
+let playerHits = []
+let computerHits = []
+
+function handleClick(e){
+    if(!gameOver){
+        if(e.target.classList.contains('taken')){
+            e.target.classList.add('boom')
+            infoDisplay.textContent = "Trafiłeś wrogi statek!"
+            let classes = Array.from(e.target.classList)
+            classes = classes.filter(className => className !== 'block')
+            classes = classes.filter(className => className !== 'boom')
+            classes = classes.filter(className => className !== 'taken')
+            playerHits.push(...classes)
+            console.log(playerHits)
+        }
+        if(!e.target.classList.contains('taken')) {
+            infoDisplay.textContent = "Pudło!"
+            e.target.classList.add('empty')
+        }
+        playerTurn = false
+        const allBoardBlocks = document.querySelectorAll('#computer div')
+        allBoardBlocks.forEach(block => block.replaceWith(block.cloneNode(true)))
+        setTimeout(computerGo, 3000)
+    }
+}
+
+// bot turn
+
+function computerGo(){
+    if(!gameOver){
+        turnDisplay.textContent = 'Tura bota.'
+        infoDisplay.textContent = 'Bot celuje . . .'
+
+        setTimeout(() => {
+            let randomGo = Math.floor(Math.random() * width * width)
+            const allBoardBlocks = document.querySelectorAll('#player div')
+
+            if(allBoardBlocks[randomGo].classList.contains('taken') &&
+               allBoardBlocks[randomGo].classList.contains('boom')
+            ){
+                computerGo()  
+                return
+            } else if (
+                allBoardBlocks[randomGo].classList.contains('taken') &&
+                !allBoardBlocks[randomGo].classList.contains('boom')
+            ) {
+                allBoardBlocks[randomGo].classList.add('boom')
+                infoDisplay.textContent = 'Bot trafił w twój statek!'
+                let classes = Array.from(e.target.classList)
+                classes = classes.filter(className => className !== 'block')
+                classes = classes.filter(className => className !== 'boom')
+                classes = classes.filter(className => className !== 'taken')
+                computerHits.push(...classes)
+            } else{
+                // 1;33
+            }
+        })
+    }
+}
+
