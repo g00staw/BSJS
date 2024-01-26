@@ -4,6 +4,40 @@ const flipShip = document.querySelector('#flip-ship')
 const startButton = document.querySelector('#start-button')
 const infoDisplay = document.querySelector('#info')
 const turnDisplay = document.querySelector('#turn-display')
+const playerNameBoard = document.querySelector('#player-board-name')
+const bodyHtml = document.querySelector('#body-main')
+const infoBoard = document.querySelector('#game-info')
+
+var playerName
+var theme
+
+window.onload = function() {
+
+    var playerNameJSON = localStorage.getItem('playerData')
+    var themeChoiceJSON = localStorage.getItem('themeData')
+
+    playerName = JSON.parse(playerNameJSON)
+    theme = JSON.parse(themeChoiceJSON)
+
+    playerNameBoard.textContent = `Plansza gracza: ${playerName.name}`
+    console.log(theme.theme)
+    if (theme.theme == "black") {
+        bodyHtml.style.background = "url(https://images.unsplash.com/photo-1529753253655-470be9a42781?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)";
+
+    } else if (theme.theme == "blue") {
+        bodyHtml.style.background = "url(https://images.unsplash.com/photo-1568145675395-66a2eda0c6d7?q=80&w=2535&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)";
+        gamesBoardContainer.style.backgroundColor = "rgb(0,60,179,0.3)"
+        optionContainer.style.backgroundColor = "rgb(0,60,179,0.3)"
+        infoBoard.style.backgroundColor = "rgb(0,60,179,0.3)"
+    } else if (theme.theme == "white") {
+        bodyHtml.style.background = "url(https://images.unsplash.com/photo-1492931307820-62fa5a68e0df?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)";
+        gamesBoardContainer.style.backgroundColor = "rgb(255,255,255,0.75)"
+        optionContainer.style.backgroundColor = "rgb(255,255,255,0.75)"
+        infoBoard.style.backgroundColor = "rgb(255,255,255,0.75)"
+        infoBoard.style.color = "rgb(0,0,0)"
+    }
+
+}
 
 // fliping
 let angle = 0
@@ -41,7 +75,7 @@ function createBoard(color, user){
 }
 
 createBoard('gray', 'player')
-createBoard('yellow', 'computer')
+createBoard('darkblue', 'computer')
 
 // creating ships
 
@@ -173,19 +207,30 @@ function highLightArea(startIndex, ship){
 let gameOver = false
 let playerTurn
 
+var playerHitsNumber = document.querySelector('#hits')
+var shotsNumber = document.querySelector('#shoots')
+var missedShots = document.querySelector('#missed')
+
+let missedShotsNumber = 0
+let playerHitsNumberNumber = 0
+let shotsNumberNumber = 0
+
+
 // start
 
 function startGame(){
+
     if(playerTurn === undefined){
         if(optionContainer.children.length != 0){
             infoDisplay.textContent = 'Rozłóż wszystkie swoje statki na planszy!'
         } else{
             const allBoardBlocks = document.querySelectorAll('#computer div')
             allBoardBlocks.forEach(block => block.addEventListener('click', handleClick))
+            playerTurn = true
+            turnDisplay.textContent = 'Twoja tura!'
+            infoDisplay.textContent = 'Gra się zaczęła!'
         }
-        playerTurn = true
-        turnDisplay.textContent = 'Twoja tura!'
-        infoDisplay.textContent = 'Gra się zaczęła!'
+        
     }
 
 }
@@ -197,13 +242,14 @@ let computerHits = []
 const playerSunkShips = []
 const computerSunkShips = []
 
-
-
 function handleClick(e){
     if(!gameOver){
+
         if(e.target.classList.contains('taken')){
             e.target.classList.add('boom')
             infoDisplay.textContent = "Trafiłeś wrogi statek!"
+            playerHitsNumberNumber++
+            shotsNumberNumber++
             let classes = Array.from(e.target.classList)
             classes = classes.filter(className => className !== 'block')
             classes = classes.filter(className => className !== 'boom')
@@ -214,12 +260,19 @@ function handleClick(e){
         if(!e.target.classList.contains('taken')) {
             infoDisplay.textContent = "Pudło!"
             e.target.classList.add('empty')
+            shotsNumberNumber++
+            missedShotsNumber++
         }
         playerTurn = false
         const allBoardBlocks = document.querySelectorAll('#computer div')
         allBoardBlocks.forEach(block => block.replaceWith(block.cloneNode(true)))
         setTimeout(computerGo, 3000)
+
+        shotsNumber.textContent = ` ${shotsNumberNumber}`
+        playerHitsNumber.textContent = `${playerHitsNumberNumber}`
+        missedShots.textContent = `${missedShotsNumber}`
     }
+    
 }
 
 // bot turn
@@ -260,7 +313,7 @@ function computerGo(){
 
         setTimeout(() => {
             playerTurn = true
-            turnDisplay.textContent = 'Twoja tura!'
+            turnDisplay.textContent = `Tura gracza: ${playerName.name}`
             infoDisplay.textContent = 'Oddaj strzał!'
             const allBoardBlocks = document.querySelectorAll('#computer div')
             allBoardBlocks.forEach(block => block.addEventListener('click', handleClick))
@@ -306,3 +359,10 @@ function checkScore(user, userHits, userSunkShips){
 
 }
 
+var slider = document.getElementById("myRange");
+
+// Aktualizacja skali diva za każdym razem, gdy suwak jest przesuwany
+slider.oninput = function() {
+    gamesBoardContainer.style.transform = "scale(" + this.value + ")"
+    gamesBoardContainer.style.margin = this.value * 50 + "px";
+}
