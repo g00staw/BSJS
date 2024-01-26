@@ -399,14 +399,26 @@ function checkScore(user, userHits, userSunkShips){
 
 
     if(playerSunkShips.length === 5){
-        infoDisplay.textContent = 'WYGRANA! Zatopiłeś/aś wszystkie statki bota!'
         audioWIN.play();
-        gameOver = true
+        infoDisplay.textContent = 'WYGRANA! Zatopiłeś/aś wszystkie statki bota!';
+        boomAUDIO.muted = true;
+        audioWIN.play();
+        setTimeout(function() {
+            // Pusty blok kodu
+        }, 3000);
+        alert('WYGRANA! Zatopiłeś/aś wszystkie statki bota!', audioWIN.play());
+        gameOver = true;
     }
     if(computerSunkShips.length === 5){
-        infoDisplay.textContent = 'PRZEGRANA! Bot zatopił wszystkie twoje statki!'
         audioLOSE.play();
-        gameOver = true
+        infoDisplay.textContent = 'PRZEGRANA! Bot zatopił wszystkie twoje statki!';
+        boomAUDIO.muted = true;
+        audioLOSE.play();
+        setTimeout(function() {
+            // Pusty blok kodu
+        }, 3000);
+        alert('PRZEGRANA! Bot zatopił wszystkie twoje statki!',  audioLOSE.play());
+        gameOver = true;
     }
 
 }

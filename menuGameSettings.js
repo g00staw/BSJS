@@ -29,6 +29,6 @@ function startGame() {
     localStorage.setItem('playerData', playerDataJSON);
     localStorage.setItem('themeData', themeDataJSON);
 
-    window.location.href = 'index.html'
+    window.location.href = 'game.html'
     // Tutaj możesz przekierować gracza do gry
   }
