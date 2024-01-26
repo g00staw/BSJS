@@ -41,8 +41,14 @@
         </div>
     
         <div class="buttons-container">
-            <button id="flip-ship">Obróć</button>
-            <button id="start-button">Start</button>
+            <button class="startButton" id="start-button">Start</button>
+            <button class="flipButton" id="flip-ship">Obróć</button>
+
+            <label for="mute">Wycisz dźwięk:</label>
+            <input type="checkbox" id="mute" name="mute">
+
+            <button class="resetButton" onclick="myFunction()" id="reset-button">Reset</button>
+            
         </div>
         <div class="slidecontainer">
             <p>Przybliżenie planszy:</p>

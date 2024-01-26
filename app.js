@@ -37,6 +37,8 @@ window.onload = function() {
         infoBoard.style.color = "rgb(0,0,0)"
     }
 
+    alert("Rozłóż statki na swojej planszy, następni kliknij przycisk 'Start' aby rozpocząć grę.");
+
 }
 
 // fliping
@@ -74,7 +76,7 @@ function createBoard(color, user){
     gamesBoardContainer.append(gameBoardContainer)
 }
 
-createBoard('gray', 'player')
+createBoard('lightblue', 'player')
 createBoard('darkblue', 'computer')
 
 // creating ships
@@ -219,7 +221,6 @@ let shotsNumberNumber = 0
 // start
 
 function startGame(){
-
     if(playerTurn === undefined){
         if(optionContainer.children.length != 0){
             infoDisplay.textContent = 'Rozłóż wszystkie swoje statki na planszy!'
@@ -229,6 +230,8 @@ function startGame(){
             playerTurn = true
             turnDisplay.textContent = 'Twoja tura!'
             infoDisplay.textContent = 'Gra się zaczęła!'
+            startButton.style.animation = "none"
+            flipShip.style.animation = "none"
         }
         
     }
@@ -245,11 +248,17 @@ const computerSunkShips = []
 function handleClick(e){
     if(!gameOver){
 
-        if(e.target.classList.contains('taken')){
+        if(e.target.classList.contains('boom') && e.target.classList.contains('taken')){
+            infoDisplay.textContent = "Przcież ten statek został trafiony! Utrata tury!"
+            shotsNumberNumber++
+            missedShotsNumber++
+        }
+        if(e.target.classList.contains('taken') && !e.target.classList.contains('boom')){
             e.target.classList.add('boom')
             infoDisplay.textContent = "Trafiłeś wrogi statek!"
-            playerHitsNumberNumber++
+            boomAUDIO.play()
             shotsNumberNumber++
+            playerHitsNumberNumber = shotsNumberNumber - missedShotsNumber
             let classes = Array.from(e.target.classList)
             classes = classes.filter(className => className !== 'block')
             classes = classes.filter(className => className !== 'boom')
@@ -257,12 +266,14 @@ function handleClick(e){
             playerHits.push(...classes)
             checkScore('player', playerHits, playerSunkShips)
         }
-        if(!e.target.classList.contains('taken')) {
+        if(!e.target.classList.contains('taken') && !e.target.classList.contains('boom')) {
             infoDisplay.textContent = "Pudło!"
+            missAUDIO.play()
             e.target.classList.add('empty')
             shotsNumberNumber++
             missedShotsNumber++
         }
+        
         playerTurn = false
         const allBoardBlocks = document.querySelectorAll('#computer div')
         allBoardBlocks.forEach(block => block.replaceWith(block.cloneNode(true)))
@@ -276,6 +287,32 @@ function handleClick(e){
 }
 
 // bot turn
+
+//audio 
+let boomAUDIO = new Audio('sounds/boom.mp3')
+let missAUDIO = new Audio('sounds/miss.mp3')
+let audioWIN = new Audio('sounds/win.mp3')
+let audioLOSE = new Audio('sounds/lose.mp3')
+let sinkShipAudio = new Audio('sounds/destroyed-ship.mp3')
+
+let muteCheckbox = document.getElementById('mute');
+
+
+muteCheckbox.addEventListener('change', function() {
+    if(this.checked) {
+        boomAUDIO.muted = true
+        missAUDIO.muted = true
+        audioWIN.muted = true
+        audioLOSE.muted = true
+        sinkShipAudio.muted = true
+    } else {
+        boomAUDIO.muted = false
+        missAUDIO.muted = false
+        audioWIN.muted = false
+        audioLOSE.muted = false
+        sinkShipAudio.muted = false
+    }
+})
 
 function computerGo(){
     if(!gameOver){
@@ -297,6 +334,7 @@ function computerGo(){
             ) {
                 allBoardBlocks[randomGo].classList.add('boom')
                 infoDisplay.textContent = 'Bot trafił w twój statek!'
+                boomAUDIO.play()
                 let classes = Array.from(allBoardBlocks[randomGo].classList)
                 classes = classes.filter(className => className !== 'block')
                 classes = classes.filter(className => className !== 'boom')
@@ -307,6 +345,7 @@ function computerGo(){
             } else{
                 // 1;33
                 infoDisplay.textContent = 'Pudło!'
+                missAUDIO.play()
                 allBoardBlocks[randomGo].classList.add('empty')
             }
         }, 3000)
@@ -326,13 +365,22 @@ function checkScore(user, userHits, userSunkShips){
     
     function checkShip(shipName, shipLength) {
         if(userHits.filter(storedShipName => storedShipName === shipName).length === shipLength){
+            let sinkedShip
+            if(shipName === 'cru') { sinkedShip = "krążownik"} 
+            if(shipName === 'sub') { sinkedShip = "łódź podwodna" }
+            if(shipName === 'carr') { sinkedShip = "lotniskowiec" }
+            if(shipName === 'dest') { sinkedShip = "niszczyciel" }
+            if(shipName === 'batt') { sinkedShip = "okręt bojowy" }
             
+
             if(user === 'player'){
-                infoDisplay.textContent = `Zatopiłeś/aś ${shipName} bota!`
+                infoDisplay.textContent = `Zatopiłeś/aś ${sinkedShip} bota!`
+                sinkShipAudio.play()
                 playerHits = userHits.filter(storedShipName => storedShipName !== shipName)
             }
             if(user === 'computer'){
-                infoDisplay.textContent = `Bot zatopił twój ${shipName}!`
+                infoDisplay.textContent = `Bot zatopił twój ${sinkedShip}!`
+                sinkShipAudio.play()
                 computerHits = userHits.filter(storedShipName => storedShipName !== shipName)
             }
             userSunkShips.push(shipName)
@@ -348,12 +396,16 @@ function checkScore(user, userHits, userSunkShips){
     console.log('playerHits', playerHits)
     console.log('playerSunkShips', playerSunkShips)
 
+
+
     if(playerSunkShips.length === 5){
         infoDisplay.textContent = 'WYGRANA! Zatopiłeś/aś wszystkie statki bota!'
+        audioWIN.play();
         gameOver = true
     }
     if(computerSunkShips.length === 5){
         infoDisplay.textContent = 'PRZEGRANA! Bot zatopił wszystkie twoje statki!'
+        audioLOSE.play();
         gameOver = true
     }
 
@@ -365,4 +417,8 @@ var slider = document.getElementById("myRange");
 slider.oninput = function() {
     gamesBoardContainer.style.transform = "scale(" + this.value + ")"
     gamesBoardContainer.style.margin = this.value * 50 + "px";
+}
+
+function myFunction() {
+    location.reload()
 }
