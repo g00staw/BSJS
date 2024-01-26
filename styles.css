@@ -1,17 +1,10 @@
-@import url('https://fonts.google.com/specimen/JetBrains+Mono');
+@import url("https://fonts.google.com/specimen/JetBrains+Mono");
 
 html{
     background-color: rgb(10, 10, 10);
     color: rgb(255, 255, 255, 0.9);
     font-family: 'JetBrains Mono';
     font-size: 20px;
-}
-
-body{
-    display: flex;
-    flex-direction: column;
-    justify-self: center;
-    align-items: center;
 }
 
 h1{
@@ -237,15 +230,16 @@ h2{
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+
     animation: scroll 500s linear infinite;
     background: #111111;
     color: #eee;
-    height: 100vh;
     min-width: 360px;
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     perspective: 800px;
     perspective-origin: 50% 50%;
   }
@@ -383,4 +377,47 @@ input[type=range]::-webkit-slider-runnable-track {
     border-style: solid;
     border-radius: 10px;
     border-color: white;
+}
+
+@media only screen and (max-height: 1300px) {
+    #gamesboard-container{
+        width: 600px;
+        scale: 0.8;
+        margin: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .container{
+        display: flex;
+        align-items: center;
+        width: 700px;
+    }
+
+    .info-container{
+        width: 700px;
+        margin: 0;
+        height: 100px;
+    }
+
+    .info-board{
+        width: 100%;
+    }
+
+    .info-container p{
+        font-size: 14px;
+    }
+
+    .option-container{
+        height: 30px;
+        margin: 10px;
+    }
+
+    .buttons-container{
+        scale: 0.9;
+    }
+
+    .slidecontainer{
+        scale: 0.9;
+    }
 }
