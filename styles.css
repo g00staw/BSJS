@@ -240,6 +240,7 @@ body {
     color: #eee;
     min-width: 360px;
     width: 100%;
+    height: 100%;
     perspective: 800px;
     perspective-origin: 50% 50%;
   }
@@ -392,16 +393,18 @@ input[type=range]::-webkit-slider-runnable-track {
         display: flex;
         align-items: center;
         width: 700px;
+        margin-bottom: -50px;
     }
 
     .info-container{
-        width: 700px;
+        width: 900px;
         margin: 0;
         height: 100px;
     }
 
     .info-board{
         width: 100%;
+        margin-bottom: -40px;
     }
 
     .info-container p{
