@@ -1,4 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: app.js</title>
 
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: app.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
 
 const gamesBoardContainer =  document.querySelector('#gamesboard-container') // kontener na plansze do gry
 const optionContainer = document.querySelector('.option-container') // kontener z opcjami
@@ -38,15 +66,15 @@ window.onload = function() {
     // załadowanie odpowiedniego motywu za pomocą instrukcji warunkowych oraz ustawienie odpowiednich styli
 
     if (theme.theme == "black") {
-        bodyHtml.style.background = "url(https://images.unsplash.com/photo-1529753253655-470be9a42781?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)";
+        bodyHtml.style.background = "url(https://images.unsplash.com/photo-1529753253655-470be9a42781?q=80&amp;w=2574&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)";
 
     } else if (theme.theme == "blue") {
-        bodyHtml.style.background = "url(https://images.unsplash.com/photo-1568145675395-66a2eda0c6d7?q=80&w=2535&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)";
+        bodyHtml.style.background = "url(https://images.unsplash.com/photo-1568145675395-66a2eda0c6d7?q=80&amp;w=2535&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)";
         gamesBoardContainer.style.backgroundColor = "rgb(0,60,179,0.3)"
         optionContainer.style.backgroundColor = "rgb(0,60,179,0.3)"
         infoBoard.style.backgroundColor = "rgb(0,60,179,0.3)"
     } else if (theme.theme == "white") {
-        bodyHtml.style.background = "url(https://images.unsplash.com/photo-1492931307820-62fa5a68e0df?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)";
+        bodyHtml.style.background = "url(https://images.unsplash.com/photo-1492931307820-62fa5a68e0df?q=80&amp;w=2670&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)";
         gamesBoardContainer.style.backgroundColor = "rgb(255,255,255,0.75)"
         optionContainer.style.backgroundColor = "rgb(255,255,255,0.75)"
         infoBoard.style.backgroundColor = "rgb(255,255,255,0.75)"
@@ -104,7 +132,7 @@ function createBoard(color, user){
     gameBoardContainer.style.backgroundColor = color
     gameBoardContainer.id = user
 
-    for(let i = 0; i < width * width; i++){ // wypelnienie plansz blokami
+    for(let i = 0; i &lt; width * width; i++){ // wypelnienie plansz blokami
         const block = document.createElement('div')
         block.classList.add('block')
         block.id = i
@@ -158,14 +186,14 @@ function getValidity(allBoardBlocks, isHorizontal, startIndex, ship){
  * @returns {Object} Zwraca obiekt zawierający bloki statku, informację czy rozmieszczenie jest prawidłowe oraz czy bloki nie są już zajęte.
  */
 
-    let validStart = isHorizontal ? startIndex <= width * width - ship.length ? startIndex : 
+    let validStart = isHorizontal ? startIndex &lt;= width * width - ship.length ? startIndex : 
         width * width - ship.length : 
-        startIndex <= width * width - width * ship.length ? startIndex : 
+        startIndex &lt;= width * width - width * ship.length ? startIndex : 
             startIndex - ship.length * width + width
 
     let shipBlocks = []
 
-    for(let i = 0; i < ship.length; i++){
+    for(let i = 0; i &lt; ship.length; i++){
         if(isHorizontal) { 
             shipBlocks.push(allBoardBlocks[Number(validStart) + i])
         }
@@ -181,7 +209,7 @@ function getValidity(allBoardBlocks, isHorizontal, startIndex, ship){
             valid = shipBlocks[0].id % width !== width - (shipBlocks.length - (index + 1)))
     } else {
         shipBlocks.every((_shipBlock, index) => 
-            valid = shipBlocks[0].id < 90 + (width * index + 1)
+            valid = shipBlocks[0].id &lt; 90 + (width * index + 1)
         )
     }
 
@@ -203,7 +231,7 @@ function addShipPiece(user, ship, startId){
  */
 
     const allBoardBlocks = document.querySelectorAll(`#${user} div`)
-    let randomBoolean = Math.random() < 0.5
+    let randomBoolean = Math.random() &lt; 0.5
     let isHorizontal = user === 'player' ? angle === 0 : randomBoolean
     let randomStartIndex = Math.floor(Math.random() * width * width)
     
@@ -213,7 +241,7 @@ function addShipPiece(user, ship, startId){
     
     const { shipBlocks, valid, notTaken} = getValidity(allBoardBlocks, isHorizontal, startIndex, ship)
 
-    if(valid && notTaken) {
+    if(valid &amp;&amp; notTaken) {
         shipBlocks.forEach(shipBlock => {
             shipBlock.classList.add(ship.name)
             shipBlock.classList.add('taken')
@@ -303,7 +331,7 @@ function highLightArea(startIndex, ship){
 
     const { shipBlocks, valid, notTaken } = getValidity(allBoardBlocks, isHorizontal, startIndex, ship)
     
-    if(valid && notTaken){
+    if(valid &amp;&amp; notTaken){
         shipBlocks.forEach(shipBlock => {
             shipBlock.classList.add('hover')
             setTimeout(() =>  shipBlock.classList.remove('hover'), 500)
@@ -376,12 +404,12 @@ function handleClick(e){
 
     if(!gameOver){
 
-        if(e.target.classList.contains('boom') && e.target.classList.contains('taken')){
+        if(e.target.classList.contains('boom') &amp;&amp; e.target.classList.contains('taken')){
             infoDisplay.textContent = "Przcież ten statek został trafiony! Utrata tury!"
             shotsNumberNumber++
             missedShotsNumber++
         }
-        if(e.target.classList.contains('taken') && !e.target.classList.contains('boom')){
+        if(e.target.classList.contains('taken') &amp;&amp; !e.target.classList.contains('boom')){
             e.target.classList.add('boom')
             infoDisplay.textContent = "Trafiłeś wrogi statek!"
             boomAUDIO.play()
@@ -394,7 +422,7 @@ function handleClick(e){
             playerHits.push(...classes)
             checkScore('player', playerHits, playerSunkShips)
         }
-        if(!e.target.classList.contains('taken') && !e.target.classList.contains('boom')) {
+        if(!e.target.classList.contains('taken') &amp;&amp; !e.target.classList.contains('boom')) {
             infoDisplay.textContent = "Pudło!"
             missAUDIO.play()
             e.target.classList.add('empty')
@@ -470,13 +498,13 @@ function computerGo(){
             let randomGo = Math.floor(Math.random() * width * width)
             const allBoardBlocks = document.querySelectorAll('#player div')
 
-            if(allBoardBlocks[randomGo].classList.contains('taken') &&
+            if(allBoardBlocks[randomGo].classList.contains('taken') &amp;&amp;
                allBoardBlocks[randomGo].classList.contains('boom')
             ){
                 computerGo()  
                 return
             } else if (
-                allBoardBlocks[randomGo].classList.contains('taken') &&
+                allBoardBlocks[randomGo].classList.contains('taken') &amp;&amp;
                 !allBoardBlocks[randomGo].classList.contains('boom')
             ) {
                 allBoardBlocks[randomGo].classList.add('boom')
@@ -605,3 +633,26 @@ function myFunction() {
 
     location.reload()
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Ship.html">Ship</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addShipPiece">addShipPiece</a></li><li><a href="global.html#checkScore">checkScore</a></li><li><a href="global.html#computerGo">computerGo</a></li><li><a href="global.html#createBoard">createBoard</a></li><li><a href="global.html#dragOver">dragOver</a></li><li><a href="global.html#dragStart">dragStart</a></li><li><a href="global.html#dropShip">dropShip</a></li><li><a href="global.html#flip">flip</a></li><li><a href="global.html#getValidity">getValidity</a></li><li><a href="global.html#handleClick">handleClick</a></li><li><a href="global.html#highLightArea">highLightArea</a></li><li><a href="global.html#myFunction">myFunction</a></li><li><a href="global.html#startGame">startGame</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Jan 27 2024 20:34:29 GMT+0100 (czas środkowoeuropejski standardowy)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

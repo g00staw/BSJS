@@ -1,4 +1,14 @@
+
 function startGame() {
+
+  /**
+ * @function startGame
+ * @description Ta funkcja jest odpowiedzialna za rozpoczęcie gry. 
+ * Pobiera nazwę gracza i wybrany motyw z formularza, a następnie zapisuje te dane w pamięci lokalnej przeglądarki. 
+ * Jeżeli pole z nazwą gracza jest puste, wyświetla alert i zatrzymuje dalsze działanie funkcji. 
+ * Po zapisaniu danych, przekierowuje gracza do strony gry.
+ */
+
     var playerName = document.getElementById("playerName").value
     
      // Sprawdzenie, czy pole jest puste
@@ -9,7 +19,7 @@ function startGame() {
 
     var themeChoice = document.querySelector('input[name="themeChoice"]:checked').value;
 
-    // Create a JSON object
+    // tworzenie obiektów JSON
     var playerData = {
       name: playerName
     };
@@ -18,11 +28,10 @@ function startGame() {
         theme: themeChoice
     };
     
-    // Convert the JSON object into a string
+    // konwersja z JSON na string
     var playerDataJSON = JSON.stringify(playerData);
     var themeDataJSON = JSON.stringify(themeData);
     
-    // Now playerDataJSON contains the player's data in JSON format
     console.log(playerDataJSON);
     console.log(themeDataJSON);
 
@@ -30,5 +39,4 @@ function startGame() {
     localStorage.setItem('themeData', themeDataJSON);
 
     window.location.href = 'game.html'
-    // Tutaj możesz przekierować gracza do gry
   }
